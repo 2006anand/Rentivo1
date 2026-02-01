@@ -1,0 +1,7 @@
+{
+  "name": "RENTIVO",
+  "description": "A premium, dark-aesthetic rental marketplace for the modern hunter. Verified flats, AI-powered tools, and seamless landlord-renter connections.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
