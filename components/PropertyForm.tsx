@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Camera, MapPin, Check, ChevronRight, ChevronLeft, Sparkles, Building2, IndianRupee, Layout, Map as MapIcon, ShieldCheck, Zap } from 'lucide-react';
+import { Camera, MapPin, Check, ChevronRight, ChevronLeft, Sparkles, Building2, IndianRupee, Layout, Map as MapIcon, ShieldCheck, Zap, Navigation, Loader2 } from 'lucide-react';
 import { COUNTRIES, INDIA_STATES, STATE_DISTRICTS, DISTRICT_AREAS, FACILITIES_LIST } from '../constants';
 import { FurnishingType, TenantPreference, FoodPreference } from '../types';
 import { generatePropertyDescription } from '../geminiService';
@@ -14,6 +14,7 @@ interface PropertyFormProps {
 const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [locating, setLocating] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -51,15 +52,48 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
     }));
   };
 
+  const handleDetectLocation = () => {
+    if (!navigator.geolocation) return;
+    setLocating(true);
+    playUISound('tap');
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        // In a real app, we'd reverse geocode here. 
+        // For this demo, we'll simulate a successful find.
+        setTimeout(() => {
+          setLocating(false);
+          playUISound('success');
+          // Fake some detected data for demo purposes
+          setFormData(prev => ({
+            ...prev,
+            address: 'Detected near your current GPS coordinates',
+            state: 'Delhi',
+            district: 'South Delhi',
+            city: 'Saket'
+          }));
+        }, 1500);
+      },
+      () => {
+        setLocating(false);
+        alert("Could not access location permissions.");
+      }
+    );
+  };
+
   const handleAiDescription = async () => {
-    if (!formData.title || !formData.city) return;
+    if (!formData.title) {
+      alert("Please enter a title first to help Gemini understand the property.");
+      return;
+    }
     setLoading(true);
     playUISound('tap');
     const desc = await generatePropertyDescription({
       title: formData.title,
       rent: Number(formData.rent),
-      location: `${formData.city}, ${formData.state}`,
-      facilities: formData.facilities
+      location: formData.city ? `${formData.city}, ${formData.state}` : 'Unspecified Location',
+      facilities: formData.facilities,
+      furnishing: formData.furnishing,
+      tenantType: formData.tenantType
     });
     setFormData(prev => ({ ...prev, description: desc }));
     setLoading(false);
@@ -150,9 +184,20 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
         {step === 2 && (
           <div className="space-y-10 animate-in fade-in slide-in-from-right-10 duration-700">
             <div className="space-y-8">
-              <div className="flex items-center gap-4 text-stone-400">
-                <MapPin className="w-6 h-6 text-amber-500" />
-                <h3 className="font-black uppercase tracking-[0.3em] text-[10px]">Geo Verification</h3>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4 text-stone-400">
+                  <MapPin className="w-6 h-6 text-amber-500" />
+                  <h3 className="font-black uppercase tracking-[0.3em] text-[10px]">Geo Verification</h3>
+                </div>
+                <button 
+                  type="button" 
+                  onClick={handleDetectLocation}
+                  disabled={locating}
+                  className="flex items-center gap-2 text-[10px] font-black text-amber-600 hover:text-amber-700 uppercase tracking-widest bg-amber-50 px-4 py-2 rounded-xl border border-amber-100 transition-all active:scale-95"
+                >
+                  {locating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Navigation className="w-3.5 h-3.5" />}
+                  {locating ? 'Detecting...' : 'Detect Location'}
+                </button>
               </div>
 
               <div className="grid grid-cols-2 gap-8">
@@ -204,7 +249,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
                     disabled={!formData.district}
                   >
                     <option value="">Select Area</option>
-                    {formData.district && DISTRICT_AREAS[formData.district]?.map(city => <option key={city} value={city}>{city}</option>)}
+                    {formData.district && DISTRICT_AREAS[formData.district]?.map(area => <option key={area} value={area}>{area}</option>)}
                   </select>
                 </div>
               </div>
@@ -216,10 +261,12 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
                   </div>
                   <div>
                     <p className="font-black text-stone-900 text-lg tracking-tight leading-none uppercase italic">Geo-Precision</p>
-                    <p className="text-[10px] font-bold text-stone-400 mt-2 uppercase tracking-widest">Awaiting spatial data...</p>
+                    <p className="text-[10px] font-bold text-stone-400 mt-2 uppercase tracking-widest">
+                      {formData.address ? 'Spatial data confirmed' : 'Awaiting spatial data...'}
+                    </p>
                   </div>
                 </div>
-                <button type="button" className="px-6 py-3 bg-white text-amber-600 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm border border-amber-100 hover:bg-amber-500 hover:text-white transition-all">Map Drop</button>
+                <button type="button" className="px-6 py-3 bg-white text-amber-600 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm border border-amber-100 hover:bg-amber-500 hover:text-white transition-all">Manual Pin</button>
               </div>
             </div>
           </div>
@@ -304,19 +351,30 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
                     type="button" 
                     onClick={handleAiDescription}
                     disabled={loading || !formData.title}
-                    className="flex items-center gap-2 text-[10px] font-black text-amber-600 hover:text-amber-700 disabled:opacity-30 transition-all uppercase tracking-widest group"
+                    className="flex items-center gap-2 text-[10px] font-black text-amber-600 hover:text-amber-700 disabled:opacity-30 transition-all uppercase tracking-widest group bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-100"
                   >
-                    <Sparkles className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />
+                    {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-500" /> : <Sparkles className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />}
                     {loading ? 'Processing...' : 'Generate with Gemini'}
                   </button>
                 </div>
-                <textarea 
-                  rows={6}
-                  className="w-full px-8 py-6 rounded-[2.5rem] bg-amber-50/20 border-2 border-amber-100 focus:bg-white focus:border-amber-400 outline-none font-medium text-stone-700 resize-none shadow-sm"
-                  value={formData.description}
-                  onChange={e => setFormData({...formData, description: e.target.value})}
-                  placeholder="The narrative of your space..."
-                />
+                <div className="relative">
+                  {loading && (
+                    <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px] rounded-[2.5rem] z-10 flex items-center justify-center">
+                       <div className="bg-white/90 p-4 rounded-2xl shadow-xl flex items-center gap-4 border border-amber-100 animate-in zoom-in-95">
+                         <div className="w-8 h-8 bg-amber-500 rounded-full animate-ping opacity-20 absolute"></div>
+                         <Sparkles className="w-6 h-6 text-amber-500 animate-pulse" />
+                         <span className="text-xs font-black uppercase tracking-widest text-stone-600">Gemini is writing...</span>
+                       </div>
+                    </div>
+                  )}
+                  <textarea 
+                    rows={6}
+                    className={`w-full px-8 py-6 rounded-[2.5rem] bg-amber-50/20 border-2 border-amber-100 focus:bg-white focus:border-amber-400 outline-none font-medium text-stone-700 resize-none shadow-sm transition-all ${loading ? 'opacity-50 blur-[2px]' : ''}`}
+                    value={formData.description}
+                    onChange={e => setFormData({...formData, description: e.target.value})}
+                    placeholder="Describe the soul of your space or use neural narration above..."
+                  />
+                </div>
               </div>
 
               <div className="space-y-4">
@@ -328,7 +386,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
                   </button>
                   <div className="aspect-square rounded-[2rem] bg-amber-50 overflow-hidden relative border border-amber-100">
                     <img src="https://picsum.photos/seed/newprop/300" className="w-full h-full object-cover" alt="Preview" />
-                    <div className="absolute top-3 right-3 bg-amber-500 text-white p-1.5 rounded-full shadow-lg">
+                    <div className="absolute top-3 right-3 bg-emerald-500 text-white p-1.5 rounded-full shadow-lg">
                       <Check className="w-4 h-4" />
                     </div>
                   </div>

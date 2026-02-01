@@ -8,18 +8,26 @@ export const generatePropertyDescription = async (details: {
   rent: number;
   location: string;
   facilities: string[];
+  furnishing: string;
+  tenantType: string;
 }) => {
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
-      contents: `Generate a compelling real estate description for a rental property in India with the following details: 
-      Title: ${details.title}, 
-      Rent: ₹${details.rent}/mo, 
-      Location: ${details.location}, 
-      Facilities: ${details.facilities.join(', ')}.
-      Make it professional and highlight the benefits. Keep it under 100 words.`,
+      contents: `Generate a compelling real estate description for a rental property in India with these details: 
+      Title: ${details.title}
+      Rent: ₹${details.rent}/month
+      Location: ${details.location}
+      Furnishing: ${details.furnishing}
+      Ideal for: ${details.tenantType}
+      Facilities: ${details.facilities.join(', ')}`,
+      config: {
+        systemInstruction: "You are an expert real estate copywriter in India. Create concise, professional, and persuasive property descriptions that highlight luxury and convenience. Avoid buzzwords like 'unbeatable' or 'stunning'. Focus on lifestyle benefits.",
+        maxOutputTokens: 200,
+        temperature: 0.7,
+      }
     });
-    return response.text || "No description generated.";
+    return response.text?.trim() || "No description generated.";
   } catch (error) {
     console.error("Gemini Error:", error);
     return "Beautifully maintained property in a prime location with all basic amenities.";
