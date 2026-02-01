@@ -17,6 +17,22 @@ export interface User {
   joinedAt: number;
 }
 
+export interface Inquiry {
+  id: string;
+  propertyId: string;
+  propertyTitle: string;
+  propertyPhoto: string;
+  senderId: string;
+  senderName: string;
+  senderAvatar: string;
+  receiverId: string;
+  message: string;
+  moveInDate?: string;
+  occupancyCount?: number;
+  status: 'PENDING' | 'ACCEPTED' | 'DECLINED';
+  timestamp: number;
+}
+
 export interface Review {
   id: string;
   authorId: string;

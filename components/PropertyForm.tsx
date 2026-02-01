@@ -73,23 +73,23 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
   };
 
   return (
-    <div className="bg-zinc-950 rounded-[3.5rem] shadow-[0_0_100px_rgba(0,0,0,1)] max-w-3xl mx-auto overflow-hidden animate-in zoom-in-95 duration-700 border border-zinc-900">
+    <div className="bg-white rounded-[3.5rem] shadow-2xl max-w-3xl mx-auto overflow-hidden animate-in zoom-in-95 duration-700 border border-amber-100">
       {/* Step Indicator Header */}
-      <div className="bg-black/40 border-b border-zinc-900 px-12 py-10">
+      <div className="bg-amber-50/50 border-b border-amber-100 px-12 py-10">
         <div className="flex justify-between items-center mb-10">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-blue-600 rounded-[1.25rem] shadow-[0_0_20px_rgba(37,99,235,0.3)]">
+            <div className="p-3 bg-amber-500 rounded-[1.25rem] shadow-lg shadow-amber-200">
               <Zap className="w-6 h-6 text-white" />
             </div>
-            <h2 className="text-4xl font-black tracking-tighter text-white uppercase italic">LISTING ENGINE</h2>
+            <h2 className="text-4xl font-black tracking-tighter text-stone-900 uppercase italic">LISTING ENGINE</h2>
           </div>
-          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-600 bg-white/5 px-4 py-2 rounded-full border border-zinc-800">Phase {step}/4</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-stone-400 bg-white px-4 py-2 rounded-full border border-amber-100">Phase {step}/4</span>
         </div>
         <div className="flex gap-4">
           {[1, 2, 3, 4].map(i => (
             <div 
               key={i} 
-              className={`h-1.5 flex-1 rounded-full transition-all duration-1000 ${step >= i ? 'bg-blue-600 shadow-[0_0_20px_rgba(37,99,235,0.5)]' : 'bg-zinc-900'}`} 
+              className={`h-1.5 flex-1 rounded-full transition-all duration-1000 ${step >= i ? 'bg-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.4)]' : 'bg-amber-100'}`} 
             />
           ))}
         </div>
@@ -99,17 +99,17 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
         {step === 1 && (
           <div className="space-y-10 animate-in fade-in slide-in-from-right-10 duration-700">
             <div className="space-y-8">
-              <div className="flex items-center gap-4 text-zinc-600">
-                <Building2 className="w-6 h-6 text-blue-500" />
+              <div className="flex items-center gap-4 text-stone-400">
+                <Building2 className="w-6 h-6 text-amber-500" />
                 <h3 className="font-black uppercase tracking-[0.3em] text-[10px]">Primary Parameters</h3>
               </div>
               
               <div className="space-y-3">
-                <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Lease Title</label>
+                <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest ml-1">Lease Title</label>
                 <input 
                   type="text" 
                   placeholder="e.g. Modern Penthouse with Skyline View"
-                  className="w-full px-8 py-5 rounded-[1.75rem] bg-zinc-900 border-2 border-zinc-800 focus:bg-black focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 outline-none transition-all font-bold text-lg text-white placeholder:text-zinc-800"
+                  className="w-full px-8 py-5 rounded-[1.75rem] bg-amber-50/20 border-2 border-amber-100 focus:bg-white focus:border-amber-400 focus:ring-4 focus:ring-amber-50 outline-none transition-all font-bold text-lg text-stone-900 placeholder:text-stone-200"
                   value={formData.title}
                   onChange={e => setFormData({...formData, title: e.target.value})}
                   required
@@ -118,13 +118,13 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
 
               <div className="grid grid-cols-2 gap-8">
                 <div className="space-y-3">
-                  <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Rent / Mo</label>
+                  <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest ml-1">Rent / Mo</label>
                   <div className="relative">
-                    <IndianRupee className="absolute left-7 top-1/2 -translate-y-1/2 w-4 h-4 text-blue-500" />
+                    <IndianRupee className="absolute left-7 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-500" />
                     <input 
                       type="number" 
                       placeholder="0.00"
-                      className="w-full pl-16 pr-8 py-5 rounded-[1.75rem] bg-zinc-900 border-2 border-zinc-800 focus:bg-black focus:border-blue-600 outline-none transition-all font-bold text-lg text-white placeholder:text-zinc-800"
+                      className="w-full pl-16 pr-8 py-5 rounded-[1.75rem] bg-amber-50/20 border-2 border-amber-100 focus:bg-white focus:border-amber-400 outline-none transition-all font-bold text-lg text-stone-900 placeholder:text-stone-200"
                       value={formData.rent}
                       onChange={e => setFormData({...formData, rent: e.target.value})}
                       required
@@ -132,11 +132,11 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
                   </div>
                 </div>
                 <div className="space-y-3">
-                  <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Bond / Deposit</label>
+                  <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest ml-1">Bond / Deposit</label>
                   <input 
                     type="number" 
                     placeholder="0.00"
-                    className="w-full px-8 py-5 rounded-[1.75rem] bg-zinc-900 border-2 border-zinc-800 focus:bg-black focus:border-blue-600 outline-none transition-all font-bold text-lg text-white placeholder:text-zinc-800"
+                    className="w-full px-8 py-5 rounded-[1.75rem] bg-amber-50/20 border-2 border-amber-100 focus:bg-white focus:border-amber-400 outline-none transition-all font-bold text-lg text-stone-900 placeholder:text-stone-200"
                     value={formData.deposit}
                     onChange={e => setFormData({...formData, deposit: e.target.value})}
                     required
@@ -150,16 +150,16 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
         {step === 2 && (
           <div className="space-y-10 animate-in fade-in slide-in-from-right-10 duration-700">
             <div className="space-y-8">
-              <div className="flex items-center gap-4 text-zinc-600">
-                <MapPin className="w-6 h-6 text-blue-500" />
+              <div className="flex items-center gap-4 text-stone-400">
+                <MapPin className="w-6 h-6 text-amber-500" />
                 <h3 className="font-black uppercase tracking-[0.3em] text-[10px]">Geo Verification</h3>
               </div>
 
               <div className="grid grid-cols-2 gap-8">
                 <div className="space-y-3">
-                  <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Market</label>
+                  <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest ml-1">Market</label>
                   <select 
-                    className="w-full px-8 py-5 rounded-[1.75rem] bg-zinc-900 border-2 border-zinc-800 outline-none font-bold text-zinc-300 appearance-none"
+                    className="w-full px-8 py-5 rounded-[1.75rem] bg-amber-50/20 border-2 border-amber-100 outline-none font-bold text-stone-700 appearance-none"
                     value={formData.country}
                     onChange={e => setFormData({...formData, country: e.target.value})}
                   >
@@ -167,9 +167,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
                   </select>
                 </div>
                 <div className="space-y-3">
-                  <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Region / State</label>
+                  <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest ml-1">Region / State</label>
                   <select 
-                    className="w-full px-8 py-5 rounded-[1.75rem] bg-zinc-900 border-2 border-zinc-800 outline-none font-bold text-zinc-300"
+                    className="w-full px-8 py-5 rounded-[1.75rem] bg-amber-50/20 border-2 border-amber-100 outline-none font-bold text-stone-700"
                     value={formData.state}
                     onChange={e => setFormData({...formData, state: e.target.value, district: '', city: ''})}
                     required
@@ -182,9 +182,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
 
               <div className="grid grid-cols-2 gap-8">
                 <div className="space-y-3">
-                  <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">City District</label>
+                  <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest ml-1">City District</label>
                   <select 
-                    className="w-full px-8 py-5 rounded-[1.75rem] bg-zinc-900 border-2 border-zinc-800 outline-none font-bold text-zinc-300 disabled:opacity-30"
+                    className="w-full px-8 py-5 rounded-[1.75rem] bg-amber-50/20 border-2 border-amber-100 outline-none font-bold text-stone-700 disabled:opacity-30"
                     value={formData.district}
                     onChange={e => setFormData({...formData, district: e.target.value, city: ''})}
                     required
@@ -195,9 +195,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
                   </select>
                 </div>
                 <div className="space-y-3">
-                  <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Local Area</label>
+                  <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest ml-1">Local Area</label>
                   <select 
-                    className="w-full px-8 py-5 rounded-[1.75rem] bg-zinc-900 border-2 border-zinc-800 outline-none font-bold text-zinc-300 disabled:opacity-30"
+                    className="w-full px-8 py-5 rounded-[1.75rem] bg-amber-50/20 border-2 border-amber-100 outline-none font-bold text-stone-700 disabled:opacity-30"
                     value={formData.city}
                     onChange={e => setFormData({...formData, city: e.target.value})}
                     required
@@ -209,17 +209,17 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
                 </div>
               </div>
 
-              <div className="p-10 bg-blue-600/5 rounded-[2.5rem] flex items-center justify-between border border-blue-600/10 shadow-2xl">
+              <div className="p-10 bg-amber-50 rounded-[2.5rem] flex items-center justify-between border border-amber-100">
                 <div className="flex items-center gap-6">
-                  <div className="bg-blue-600 p-4 rounded-2xl text-white shadow-[0_10px_30px_rgba(37,99,235,0.4)]">
+                  <div className="bg-amber-500 p-4 rounded-2xl text-white shadow-md">
                     <MapIcon className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="font-black text-white text-lg tracking-tight leading-none uppercase italic">Geo-Precision</p>
-                    <p className="text-[10px] font-bold text-zinc-500 mt-2 uppercase tracking-widest">Awaiting spatial data...</p>
+                    <p className="font-black text-stone-900 text-lg tracking-tight leading-none uppercase italic">Geo-Precision</p>
+                    <p className="text-[10px] font-bold text-stone-400 mt-2 uppercase tracking-widest">Awaiting spatial data...</p>
                   </div>
                 </div>
-                <button type="button" className="px-6 py-3 bg-white text-blue-600 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl hover:bg-blue-600 hover:text-white transition-all">Map Drop</button>
+                <button type="button" className="px-6 py-3 bg-white text-amber-600 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm border border-amber-100 hover:bg-amber-500 hover:text-white transition-all">Map Drop</button>
               </div>
             </div>
           </div>
@@ -228,16 +228,16 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
         {step === 3 && (
           <div className="space-y-10 animate-in fade-in slide-in-from-right-10 duration-700">
             <div className="space-y-8">
-              <div className="flex items-center gap-4 text-zinc-600">
-                <ShieldCheck className="w-6 h-6 text-blue-500" />
+              <div className="flex items-center gap-4 text-stone-400">
+                <ShieldCheck className="w-6 h-6 text-amber-500" />
                 <h3 className="font-black uppercase tracking-[0.3em] text-[10px]">Filter Logic</h3>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="space-y-3">
-                  <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Fitment</label>
+                  <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest ml-1">Fitment</label>
                   <select 
-                    className="w-full px-6 py-4 bg-zinc-900 rounded-[1.5rem] border border-zinc-800 font-bold text-zinc-300 outline-none focus:border-blue-600 transition-colors"
+                    className="w-full px-6 py-4 bg-amber-50/30 rounded-[1.5rem] border border-amber-100 font-bold text-stone-700 outline-none focus:border-amber-400 transition-colors"
                     value={formData.furnishing}
                     onChange={e => setFormData({...formData, furnishing: e.target.value as FurnishingType})}
                   >
@@ -245,9 +245,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
                   </select>
                 </div>
                 <div className="space-y-3">
-                  <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Cohort</label>
+                  <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest ml-1">Cohort</label>
                   <select 
-                    className="w-full px-6 py-4 bg-zinc-900 rounded-[1.5rem] border border-zinc-800 font-bold text-zinc-300 outline-none focus:border-blue-600 transition-colors"
+                    className="w-full px-6 py-4 bg-amber-50/30 rounded-[1.5rem] border border-amber-100 font-bold text-stone-700 outline-none focus:border-amber-400 transition-colors"
                     value={formData.tenantType}
                     onChange={e => setFormData({...formData, tenantType: e.target.value as TenantPreference})}
                   >
@@ -255,9 +255,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
                   </select>
                 </div>
                 <div className="space-y-3">
-                  <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Cuisine Policy</label>
+                  <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest ml-1">Cuisine Policy</label>
                   <select 
-                    className="w-full px-6 py-4 bg-zinc-900 rounded-[1.5rem] border border-zinc-800 font-bold text-zinc-300 outline-none focus:border-blue-600 transition-colors"
+                    className="w-full px-6 py-4 bg-amber-50/30 rounded-[1.5rem] border border-amber-100 font-bold text-stone-700 outline-none focus:border-amber-400 transition-colors"
                     value={formData.foodPreference}
                     onChange={e => setFormData({...formData, foodPreference: e.target.value as FoodPreference})}
                   >
@@ -267,7 +267,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
               </div>
 
               <div className="space-y-6">
-                <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Asset Features</label>
+                <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest ml-1">Asset Features</label>
                 <div className="flex flex-wrap gap-3">
                   {FACILITIES_LIST.map(f => (
                     <button
@@ -276,8 +276,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
                       onClick={() => handleFacilityToggle(f)}
                       className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border-2 ${
                         formData.facilities.includes(f) 
-                          ? 'bg-blue-600 border-blue-600 text-white shadow-xl shadow-blue-900/30 scale-105' 
-                          : 'bg-zinc-900 border-zinc-800 text-zinc-600 hover:border-zinc-700 hover:text-zinc-400'
+                          ? 'bg-amber-500 border-amber-500 text-white shadow-md scale-105' 
+                          : 'bg-white border-amber-100 text-stone-400 hover:border-amber-200 hover:text-stone-600'
                       }`}
                     >
                       {f}
@@ -292,19 +292,19 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
         {step === 4 && (
           <div className="space-y-10 animate-in fade-in slide-in-from-right-10 duration-700">
             <div className="space-y-8">
-              <div className="flex items-center gap-4 text-zinc-600">
-                <Layout className="w-6 h-6 text-blue-500" />
+              <div className="flex items-center gap-4 text-stone-400">
+                <Layout className="w-6 h-6 text-amber-500" />
                 <h3 className="font-black uppercase tracking-[0.3em] text-[10px]">Asset Vision</h3>
               </div>
 
               <div className="space-y-3">
                 <div className="flex justify-between items-center mb-1 px-2">
-                  <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Neural Narration</label>
+                  <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest">Neural Narration</label>
                   <button 
                     type="button" 
                     onClick={handleAiDescription}
                     disabled={loading || !formData.title}
-                    className="flex items-center gap-2 text-[10px] font-black text-blue-500 hover:text-blue-400 disabled:opacity-20 transition-all uppercase tracking-widest group"
+                    className="flex items-center gap-2 text-[10px] font-black text-amber-600 hover:text-amber-700 disabled:opacity-30 transition-all uppercase tracking-widest group"
                   >
                     <Sparkles className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />
                     {loading ? 'Processing...' : 'Generate with Gemini'}
@@ -312,7 +312,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
                 </div>
                 <textarea 
                   rows={6}
-                  className="w-full px-8 py-6 rounded-[2.5rem] bg-zinc-900 border-2 border-zinc-800 focus:bg-black focus:border-blue-600 outline-none font-medium text-zinc-200 resize-none shadow-2xl"
+                  className="w-full px-8 py-6 rounded-[2.5rem] bg-amber-50/20 border-2 border-amber-100 focus:bg-white focus:border-amber-400 outline-none font-medium text-stone-700 resize-none shadow-sm"
                   value={formData.description}
                   onChange={e => setFormData({...formData, description: e.target.value})}
                   placeholder="The narrative of your space..."
@@ -320,15 +320,15 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
               </div>
 
               <div className="space-y-4">
-                <label className="text-[10px] font-black text-zinc-600 uppercase tracking-widest ml-1">Asset Imagery</label>
+                <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest ml-1">Asset Imagery</label>
                 <div className="grid grid-cols-4 gap-6">
-                  <button type="button" className="aspect-square rounded-[2rem] border-2 border-dashed border-zinc-800 flex flex-col items-center justify-center text-zinc-600 hover:border-blue-600 hover:bg-blue-600/5 hover:text-blue-500 transition-all group shadow-xl">
+                  <button type="button" className="aspect-square rounded-[2rem] border-2 border-dashed border-amber-100 flex flex-col items-center justify-center text-stone-400 hover:border-amber-400 hover:bg-amber-50 hover:text-amber-600 transition-all group">
                     <Camera className="w-10 h-10 mb-2 group-hover:scale-110 transition-transform" />
                     <span className="text-[9px] font-black uppercase tracking-[0.2em]">Capture</span>
                   </button>
-                  <div className="aspect-square rounded-[2rem] bg-zinc-900 overflow-hidden relative shadow-2xl border border-zinc-800">
-                    <img src="https://picsum.photos/seed/newprop/300" className="w-full h-full object-cover grayscale-[0.5]" alt="Preview" />
-                    <div className="absolute top-3 right-3 bg-blue-600 text-white p-1.5 rounded-full shadow-2xl border border-white/20">
+                  <div className="aspect-square rounded-[2rem] bg-amber-50 overflow-hidden relative border border-amber-100">
+                    <img src="https://picsum.photos/seed/newprop/300" className="w-full h-full object-cover" alt="Preview" />
+                    <div className="absolute top-3 right-3 bg-amber-500 text-white p-1.5 rounded-full shadow-lg">
                       <Check className="w-4 h-4" />
                     </div>
                   </div>
@@ -338,11 +338,11 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
           </div>
         )}
 
-        <div className="mt-16 flex items-center justify-between pt-10 border-t border-zinc-900">
+        <div className="mt-16 flex items-center justify-between pt-10 border-t border-amber-50">
           <button 
             type="button" 
             onClick={onCancel}
-            className="text-[10px] font-black text-zinc-700 hover:text-zinc-500 uppercase tracking-[0.4em] px-6 transition-colors"
+            className="text-[10px] font-black text-stone-400 hover:text-stone-600 uppercase tracking-[0.4em] px-6 transition-colors"
           >
             Abort
           </button>
@@ -352,7 +352,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
               <button 
                 type="button" 
                 onClick={prevStep}
-                className="px-10 py-5 rounded-2xl border border-zinc-800 text-zinc-400 font-black text-[10px] uppercase tracking-widest hover:text-white transition-all flex items-center gap-3"
+                className="px-10 py-5 rounded-2xl border border-amber-100 text-stone-500 font-black text-[10px] uppercase tracking-widest hover:bg-amber-50 transition-all flex items-center gap-3"
               >
                 <ChevronLeft className="w-5 h-5" />
                 Back
@@ -362,7 +362,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
               <button 
                 type="button" 
                 onClick={nextStep}
-                className="px-12 py-5 bg-blue-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-blue-500 hover:shadow-[0_10px_30px_rgba(37,99,235,0.3)] transition-all flex items-center gap-3 group active:scale-95 shadow-xl"
+                className="px-12 py-5 bg-amber-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-amber-600 shadow-md transition-all flex items-center gap-3 group active:scale-95"
               >
                 Continue
                 <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -370,7 +370,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onSubmit, onCancel }) => {
             ) : (
               <button 
                 type="submit"
-                className="px-14 py-5 bg-white text-black rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] hover:bg-zinc-200 hover:shadow-[0_10px_40px_rgba(255,255,255,0.1)] transition-all active:scale-95 shadow-2xl"
+                className="px-14 py-5 bg-stone-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] hover:bg-stone-800 shadow-lg transition-all active:scale-95"
               >
                 Launch Listing
               </button>

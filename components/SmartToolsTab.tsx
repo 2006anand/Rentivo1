@@ -41,57 +41,57 @@ const SmartToolsTab: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto py-16 px-4 space-y-20 animate-in fade-in duration-1000">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-10 border-b border-zinc-900 pb-16 relative">
-        <div className="absolute -top-20 left-1/4 w-[400px] h-[400px] bg-blue-600/5 blur-[100px] rounded-full -z-10"></div>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-10 border-b border-amber-100 pb-16 relative">
+        <div className="absolute -top-20 left-1/4 w-[400px] h-[400px] bg-amber-400/5 blur-[100px] rounded-full -z-10"></div>
         <div className="max-w-3xl space-y-6">
-          <div className="inline-flex items-center gap-3 px-4 py-1.5 bg-blue-600/10 text-blue-500 rounded-full text-[10px] font-black uppercase tracking-[0.4em] border border-blue-500/20">
+          <div className="inline-flex items-center gap-3 px-4 py-1.5 bg-amber-50 text-amber-600 rounded-full text-[10px] font-black uppercase tracking-[0.4em] border border-amber-100">
             <Zap className="w-4 h-4" /> Neural Infrastructure
           </div>
-          <h2 className="text-7xl font-black text-white tracking-tighter leading-[0.85] uppercase italic">Intelligent <span className="text-blue-500">Living.</span></h2>
-          <p className="text-xl text-zinc-500 font-medium max-w-xl">Harness multi-modal AI for hyper-accurate document verification and professional asset creation.</p>
+          <h2 className="text-7xl font-black text-stone-900 tracking-tighter leading-[0.85] uppercase italic">Intelligent <span className="text-amber-500">Living.</span></h2>
+          <p className="text-xl text-stone-500 font-medium max-w-xl">Harness multi-modal AI for hyper-accurate document verification and professional asset creation.</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Document Scanner */}
-        <div className="group bg-zinc-900/40 rounded-[3.5rem] p-12 shadow-[0_40px_100px_rgba(0,0,0,0.4)] border border-zinc-800/50 flex flex-col hover:bg-zinc-900/60 hover:border-blue-600/20 transition-all duration-700 backdrop-blur-3xl">
-          <div className="w-20 h-20 bg-blue-600 rounded-[2rem] flex items-center justify-center mb-10 shadow-[0_20px_50px_rgba(37,99,235,0.4)] group-hover:scale-110 transition-transform group-hover:rotate-3">
+        <div className="group bg-white rounded-[3.5rem] p-12 shadow-sm border border-amber-100/60 flex flex-col hover:border-amber-400/50 transition-all duration-700 backdrop-blur-3xl">
+          <div className="w-20 h-20 bg-amber-500 rounded-[2rem] flex items-center justify-center mb-10 shadow-lg group-hover:scale-110 transition-transform group-hover:rotate-3">
             <FileText className="text-white w-10 h-10" />
           </div>
-          <h3 className="text-3xl font-black text-white mb-4 tracking-tighter uppercase italic">Spatial Analyzer</h3>
-          <p className="text-zinc-500 mb-12 font-medium leading-relaxed">Verifying rent receipts, legal utility data, and maintenance records with neural precision.</p>
+          <h3 className="text-3xl font-black text-stone-900 mb-4 tracking-tighter uppercase italic">Spatial Analyzer</h3>
+          <p className="text-stone-500 mb-12 font-medium leading-relaxed">Verifying rent receipts, legal utility data, and maintenance records with neural precision.</p>
           
           <div className="flex-1 space-y-8">
-            <label className="group/drop relative flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-zinc-800 rounded-[3rem] hover:border-blue-600 hover:bg-blue-600/5 transition-all cursor-pointer overflow-hidden shadow-inner">
+            <label className="group/drop relative flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-amber-100 rounded-[3rem] hover:border-amber-400 hover:bg-amber-50 transition-all cursor-pointer overflow-hidden shadow-inner">
               <div className="flex flex-col items-center transition-all group-hover/drop:scale-105 duration-500">
-                <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center mb-6 group-hover/drop:bg-blue-600 group-hover/drop:text-white transition-colors border border-zinc-800">
-                  <Upload className="w-7 h-7 text-zinc-600 group-hover/drop:text-white" />
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-6 group-hover/drop:bg-amber-500 group-hover/drop:text-white transition-colors border border-amber-50 shadow-sm">
+                  <Upload className="w-7 h-7 text-stone-400 group-hover/drop:text-white" />
                 </div>
-                <span className="text-xs font-black text-zinc-400 uppercase tracking-widest">Transmit Encrypted Data</span>
-                <span className="text-[10px] text-zinc-600 mt-2 uppercase tracking-widest opacity-60">PDF, JPG, PNG Supported</span>
+                <span className="text-xs font-black text-stone-400 uppercase tracking-widest">Transmit Encrypted Data</span>
+                <span className="text-[10px] text-stone-300 mt-2 uppercase tracking-widest opacity-60">PDF, JPG, PNG Supported</span>
               </div>
               <input type="file" className="hidden" onChange={handleFileUpload} accept="image/*" />
             </label>
 
             {analyzing && (
-              <div className="p-8 bg-black rounded-[2rem] flex items-center justify-center gap-6 border border-zinc-800 animate-pulse">
+              <div className="p-8 bg-amber-50 rounded-[2rem] flex items-center justify-center gap-6 border border-amber-100 animate-pulse">
                 <div className="relative">
-                  <div className="absolute inset-0 bg-blue-600 rounded-full animate-ping opacity-30"></div>
-                  <Loader2 className="w-8 h-8 text-blue-500 animate-spin relative" />
+                  <div className="absolute inset-0 bg-amber-500 rounded-full animate-ping opacity-30"></div>
+                  <Loader2 className="w-8 h-8 text-amber-500 animate-spin relative" />
                 </div>
-                <span className="text-[10px] font-black text-blue-500 uppercase tracking-[0.4em]">Neural computation in progress...</span>
+                <span className="text-[10px] font-black text-amber-600 uppercase tracking-[0.4em]">Neural computation in progress...</span>
               </div>
             )}
 
             {analysisResult && (
-              <div className="p-10 bg-blue-600/5 rounded-[3rem] border border-blue-600/10 animate-in zoom-in-95 duration-700 shadow-2xl">
+              <div className="p-10 bg-amber-50/50 rounded-[3rem] border border-amber-100 animate-in zoom-in-95 duration-700 shadow-sm">
                 <div className="flex items-center justify-between mb-6">
-                  <h4 className="font-black text-blue-500 text-[10px] uppercase tracking-[0.4em] flex items-center gap-3">
+                  <h4 className="font-black text-amber-600 text-[10px] uppercase tracking-[0.4em] flex items-center gap-3">
                     <Sparkles className="w-4 h-4" /> Gemini Output
                   </h4>
-                  <button onClick={() => setAnalysisResult(null)} className="text-[10px] font-black text-zinc-700 hover:text-white uppercase tracking-widest transition-colors">Wipe</button>
+                  <button onClick={() => setAnalysisResult(null)} className="text-[10px] font-black text-stone-400 hover:text-stone-900 uppercase tracking-widest transition-colors">Wipe</button>
                 </div>
-                <div className="text-lg text-zinc-300 whitespace-pre-line leading-relaxed font-medium italic border-l-2 border-blue-600/30 pl-6">
+                <div className="text-lg text-stone-600 whitespace-pre-line leading-relaxed font-medium italic border-l-2 border-amber-300/50 pl-6">
                   {analysisResult}
                 </div>
               </div>
@@ -100,12 +100,12 @@ const SmartToolsTab: React.FC = () => {
         </div>
 
         {/* Banner Generator */}
-        <div className="group bg-black rounded-[3.5rem] p-12 shadow-[0_40px_100px_rgba(0,0,0,0.6)] flex flex-col hover:shadow-[0_40px_100px_rgba(37,99,235,0.1)] transition-all duration-700 border border-zinc-900 backdrop-blur-3xl">
-          <div className="w-20 h-20 bg-zinc-900 rounded-[2rem] flex items-center justify-center mb-10 border border-zinc-800 group-hover:scale-110 transition-transform shadow-2xl group-hover:-rotate-3">
-            <ImageIcon className="text-blue-500 w-10 h-10" />
+        <div className="group bg-[#FFFDF0] rounded-[3.5rem] p-12 shadow-sm flex flex-col hover:shadow-xl transition-all duration-700 border border-amber-100 backdrop-blur-3xl">
+          <div className="w-20 h-20 bg-white rounded-[2rem] flex items-center justify-center mb-10 border border-amber-50 group-hover:scale-110 transition-transform shadow-md group-hover:-rotate-3">
+            <ImageIcon className="text-amber-500 w-10 h-10" />
           </div>
-          <h3 className="text-3xl font-black text-white mb-4 tracking-tighter uppercase italic">Asset Visualizer</h3>
-          <p className="text-zinc-500 mb-12 font-medium leading-relaxed">Generate cinematic architectural marketing assets with Gemini 2.5 Flash-Image.</p>
+          <h3 className="text-3xl font-black text-stone-900 mb-4 tracking-tighter uppercase italic">Asset Visualizer</h3>
+          <p className="text-stone-500 mb-12 font-medium leading-relaxed">Generate cinematic architectural marketing assets with Gemini 2.5 Flash-Image.</p>
           
           <div className="space-y-10">
             <div className="grid grid-cols-3 gap-4">
@@ -119,8 +119,8 @@ const SmartToolsTab: React.FC = () => {
                   onClick={() => { playUISound('tap'); setAspectRatio(ratio.id as any); }}
                   className={`flex flex-col items-center gap-3 p-5 rounded-[1.75rem] border-2 transition-all active:scale-95 ${
                     aspectRatio === ratio.id 
-                      ? "bg-blue-600 border-blue-600 text-white shadow-[0_15px_40px_rgba(37,99,235,0.4)] scale-105" 
-                      : "bg-zinc-900 border-zinc-800 text-zinc-600 hover:border-zinc-600 hover:bg-zinc-800"
+                      ? "bg-stone-900 border-stone-900 text-white shadow-xl scale-105" 
+                      : "bg-white border-amber-100 text-stone-400 hover:border-amber-300 hover:bg-amber-50"
                   }`}
                 >
                   {ratio.icon}
@@ -134,14 +134,14 @@ const SmartToolsTab: React.FC = () => {
                 <input 
                   type="text" 
                   placeholder="The design philosophy (e.g. brutalist interior, dusk lighting)"
-                  className="w-full px-10 py-7 rounded-[2.5rem] bg-zinc-900 border-2 border-zinc-800 focus:bg-black focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 outline-none transition-all font-bold text-lg text-white placeholder:text-zinc-800 shadow-inner"
+                  className="w-full px-10 py-7 rounded-[2.5rem] bg-white border-2 border-amber-100 focus:border-amber-400 focus:ring-4 focus:ring-amber-50 outline-none transition-all font-bold text-lg text-stone-800 placeholder:text-stone-200"
                   value={bannerPrompt}
                   onChange={(e) => setBannerPrompt(e.target.value)}
                 />
                 <button 
                   onClick={handleGenerateBanner}
                   disabled={generating || !bannerPrompt}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-4 bg-white text-black rounded-3xl font-black hover:scale-110 active:scale-90 transition-all disabled:opacity-10 shadow-2xl"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-4 bg-amber-500 text-white rounded-3xl font-black hover:scale-110 active:scale-90 transition-all disabled:opacity-20 shadow-md"
                 >
                   {generating ? <Loader2 className="w-6 h-6 animate-spin" /> : <ArrowRight className="w-6 h-6" />}
                 </button>
@@ -149,14 +149,14 @@ const SmartToolsTab: React.FC = () => {
             </div>
 
             {bannerUrl ? (
-              <div className="relative group/img rounded-[3rem] overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.8)] border border-zinc-800 animate-in zoom-in-95 duration-1000">
-                <img src={bannerUrl} alt="Generated Banner" className="w-full h-auto grayscale-[0.2] group-hover/img:grayscale-0 transition-all duration-1000" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover/img:opacity-100 transition-all duration-500 flex items-end p-10 backdrop-blur-[2px]">
-                  <button className="px-10 py-4 bg-white text-black rounded-[1.5rem] text-[10px] font-black uppercase tracking-widest hover:bg-zinc-200 transition-colors shadow-2xl">Extract Asset</button>
+              <div className="relative group/img rounded-[3rem] overflow-hidden shadow-lg border border-amber-50 animate-in zoom-in-95 duration-1000">
+                <img src={bannerUrl} alt="Generated Banner" className="w-full h-auto group-hover/img:scale-[1.02] transition-all duration-1000" />
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 via-transparent to-transparent opacity-0 group-hover/img:opacity-100 transition-all duration-500 flex items-end p-10 backdrop-blur-[1px]">
+                  <button className="px-10 py-4 bg-white text-stone-900 rounded-[1.5rem] text-[10px] font-black uppercase tracking-widest hover:bg-amber-50 transition-colors shadow-lg">Extract Asset</button>
                 </div>
               </div>
             ) : (
-              <div className="h-48 rounded-[3rem] bg-zinc-900 border-2 border-dashed border-zinc-800 flex items-center justify-center text-zinc-700 font-black uppercase tracking-[0.4em] text-xs italic opacity-40">
+              <div className="h-48 rounded-[3rem] bg-white border-2 border-dashed border-amber-100 flex items-center justify-center text-stone-300 font-black uppercase tracking-[0.4em] text-xs italic opacity-40 shadow-inner">
                 Latent Preview Zone
               </div>
             )}
