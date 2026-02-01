@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from 'react';
-import { Camera, Calendar, Clock, Star, Building2, Mail, Phone, Info, Check, X, Crop, Upload, Wand2, MessageSquare, ShieldCheck, ArrowUpRight, User as UserIcon, LogOut, ChevronLeft } from 'lucide-react';
+import { Camera, Calendar, Clock, Star, Building2, Mail, Phone, Info, Check, X, Crop, Upload, Wand2, MessageSquare, ShieldCheck, ArrowUpRight, User as UserIcon, LogOut, ChevronLeft, ChevronRight, Zap, FileText } from 'lucide-react';
 import { User as UserType, Inquiry } from '../types';
 import { playUISound } from './SoundFeedback';
 
@@ -15,6 +15,7 @@ interface ProfileTabProps {
 const ProfileTab: React.FC<ProfileTabProps> = ({ user, inquiries, onUpdate, onLogout, onBack }) => {
   const [isSaving, setIsSaving] = useState(false);
   const [activeSubTab, setActiveSubTab] = useState<'DETAILS' | 'MESSAGES'>('DETAILS');
+  const [currentStep, setCurrentStep] = useState(1);
   const [isCropModalOpen, setIsCropModalOpen] = useState(false);
   const [tempImage, setTempImage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -28,7 +29,26 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ user, inquiries, onUpdate, onLo
   const handleSave = () => {
     setIsSaving(true);
     playUISound('success');
-    setTimeout(() => setIsSaving(false), 1200);
+    setTimeout(() => {
+      setIsSaving(false);
+      setCurrentStep(1); // Reset wizard after successful save
+    }, 1200);
+  };
+
+  const nextStep = () => {
+    if (currentStep < 3) {
+      playUISound('tap');
+      setCurrentStep(prev => prev + 1);
+    } else {
+      handleSave();
+    }
+  };
+
+  const prevStep = () => {
+    if (currentStep > 1) {
+      playUISound('pop');
+      setCurrentStep(prev => prev - 1);
+    }
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,27 +97,32 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ user, inquiries, onUpdate, onLo
     img.src = tempImage;
   };
 
+  const steps = [
+    { id: 1, title: 'Neural ID', icon: <UserIcon className="w-4 h-4" /> },
+    { id: 2, title: 'Logistics', icon: <Calendar className="w-4 h-4" /> },
+    { id: 3, title: 'Narrative', icon: <FileText className="w-4 h-4" /> },
+  ];
+
   return (
-    <div className="max-w-5xl mx-auto py-8 md:py-12 animate-in fade-in slide-in-from-bottom-10 duration-1000">
+    <div className="max-w-5xl mx-auto py-6 md:py-10 animate-in fade-in slide-in-from-bottom-5 duration-700 px-4">
+      {/* Action Header */}
       <div className="mb-8 flex items-center justify-between">
         <button 
           onClick={onBack}
           className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-stone-400 hover:text-stone-900 transition-colors group"
         >
-          <div className="p-2 bg-white rounded-lg border border-amber-100 group-hover:border-amber-500">
+          <div className="p-2 bg-white rounded-xl border border-amber-100 group-hover:border-amber-400 shadow-sm transition-all">
             <ChevronLeft className="w-4 h-4" />
           </div>
           Back to Explore
         </button>
 
         <button 
-          onClick={onLogout}
-          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-rose-400 hover:text-rose-600 transition-colors group"
+          onClick={() => { playUISound('pop'); onLogout(); }}
+          className="flex items-center gap-3 px-4 py-2.5 bg-rose-50 border border-rose-100 rounded-2xl text-rose-600 hover:bg-rose-100 transition-all active:scale-95 group"
         >
-          Sign Out Portal
-          <div className="p-2 bg-rose-50 rounded-lg border border-rose-100 group-hover:bg-rose-100">
-            <LogOut className="w-4 h-4" />
-          </div>
+          <span className="text-[10px] font-black uppercase tracking-widest">Sign Out</span>
+          <LogOut className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
 
@@ -112,91 +137,82 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ user, inquiries, onUpdate, onLo
       {isCropModalOpen && (
         <div className="fixed inset-0 z-[300] flex items-center justify-center p-6 animate-in fade-in duration-300">
           <div className="absolute inset-0 bg-stone-900/80 backdrop-blur-xl" onClick={() => !isProcessing && setIsCropModalOpen(false)} />
-          <div className="relative bg-[#FFFDF0] rounded-[3rem] w-full max-w-lg p-10 shadow-2xl border border-amber-100 animate-in zoom-in-95 duration-500 overflow-hidden">
+          <div className="relative bg-[#FFFDF0] rounded-[2.5rem] w-full max-w-lg p-10 shadow-2xl border border-amber-100 animate-in zoom-in-95 duration-500 overflow-hidden">
             <div className="flex items-center justify-between mb-8">
-              <h3 className="text-xl font-black text-stone-900 uppercase italic tracking-tighter">Avatar Refiner</h3>
+              <h3 className="text-xl font-black text-stone-900 uppercase italic tracking-tighter">Identity Refiner</h3>
               <button onClick={() => setIsCropModalOpen(false)} className="p-2 text-stone-400 hover:text-stone-900 transition-colors">
                 <X className="w-6 h-6" />
               </button>
             </div>
 
-            <div className="relative aspect-square rounded-[2rem] overflow-hidden bg-amber-50 border-2 border-amber-100 mb-8 group">
+            <div className="relative aspect-square rounded-[2rem] overflow-hidden bg-amber-50 border-2 border-amber-100 mb-8 group shadow-inner">
               {tempImage && (
                 <img 
                   src={tempImage} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[3s]" 
+                  className="w-full h-full object-cover" 
                   alt="Preview" 
                 />
               )}
-              <div className="absolute inset-0 border-[32px] border-stone-900/40 pointer-events-none"></div>
-              <div className="absolute inset-8 border border-white/40 border-dashed pointer-events-none"></div>
+              <div className="absolute inset-0 border-[24px] border-stone-900/20 pointer-events-none"></div>
               
               {isProcessing && (
                 <div className="absolute inset-0 bg-amber-500/20 backdrop-blur-sm flex flex-col items-center justify-center">
                   <div className="w-12 h-12 border-4 border-white/20 border-t-white rounded-full animate-spin mb-4"></div>
-                  <span className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Optimizing...</span>
                 </div>
               )}
             </div>
 
-            <div className="space-y-4">
-              <p className="text-[10px] text-stone-400 font-bold uppercase tracking-widest text-center">Neural algorithms will center-crop and optimize your identity.</p>
-              <button 
-                onClick={finalizeImage}
-                disabled={isProcessing}
-                className="w-full py-5 bg-stone-900 text-white rounded-[1.75rem] font-black text-xs uppercase tracking-widest hover:bg-stone-800 transition-all flex items-center justify-center gap-3 active:scale-95 shadow-xl"
-              >
-                <Wand2 className="w-4 h-4" /> Finalize Identity
-              </button>
-            </div>
-            <canvas ref={canvasRef} className="hidden" />
+            <button 
+              onClick={finalizeImage}
+              disabled={isProcessing}
+              className="w-full py-5 bg-stone-900 text-white rounded-[1.5rem] font-black text-xs uppercase tracking-widest hover:bg-stone-800 transition-all flex items-center justify-center gap-3 active:scale-95 shadow-xl"
+            >
+              <Wand2 className="w-4 h-4" /> Save New Identity
+            </button>
           </div>
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
-        {/* Left Side: Summary Card */}
-        <div className="lg:col-span-4 space-y-8">
-          <div className="bg-white rounded-[3rem] p-8 md:p-10 shadow-sm border border-amber-100/60 backdrop-blur-xl sticky top-32">
-            <div className="relative group mx-auto w-40 h-40 md:w-48 md:h-48">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Left Side: Identity Snapshot */}
+        <div className="lg:col-span-4 space-y-6">
+          <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-amber-100/60 backdrop-blur-xl sticky top-24">
+            <div className="relative group mx-auto w-36 h-36 md:w-44 md:h-44">
               <img 
                 src={user.avatar} 
-                className="w-full h-full rounded-[2.5rem] object-cover border-4 border-white shadow-lg group-hover:scale-[1.02] transition-all duration-700"
+                className="w-full h-full rounded-[2rem] object-cover border-4 border-white shadow-md group-hover:scale-105 transition-all duration-500"
                 alt={user.name}
               />
               <button 
                 onClick={() => fileInputRef.current?.click()}
-                className="absolute -bottom-2 -right-2 p-3 md:p-4 bg-amber-500 text-white rounded-2xl shadow-lg hover:scale-110 transition-transform active:scale-95 border-4 border-white group/btn"
+                className="absolute -bottom-2 -right-2 p-3 bg-amber-500 text-white rounded-xl shadow-lg hover:scale-110 transition-transform active:scale-95 border-4 border-white group/btn"
               >
-                <Camera className="w-4 h-4 md:w-5 md:h-5 group-hover:rotate-12 transition-transform" />
+                <Camera className="w-4 h-4" />
               </button>
             </div>
             
-            <div className="text-center mt-8 md:mt-10">
-              <h2 className="text-2xl md:text-3xl font-black text-stone-900 leading-tight tracking-tighter uppercase italic">{user.name}</h2>
-              <p className="text-amber-600 font-black text-[10px] mt-3 uppercase tracking-[0.4em]">{user.role}</p>
-              
-              <div className="flex justify-center items-center gap-2 mt-6 px-5 py-2.5 bg-amber-50 rounded-2xl inline-flex border border-amber-100 shadow-inner">
-                <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
-                <span className="font-black text-stone-700 text-sm">{user.rating.toFixed(1)}</span>
-                <span className="text-stone-400 text-[10px] font-black ml-1 uppercase tracking-widest">Score</span>
+            <div className="text-center mt-8">
+              <h2 className="text-2xl font-black text-stone-900 leading-tight tracking-tighter uppercase italic">{user.name}</h2>
+              <div className="flex items-center justify-center gap-2 mt-4 px-4 py-2 bg-amber-50 rounded-xl inline-flex border border-amber-100 shadow-sm">
+                <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                <span className="font-black text-stone-700 text-xs">{user.rating.toFixed(1)}</span>
               </div>
             </div>
 
-            <div className="mt-10 md:mt-12 space-y-3">
+            <div className="mt-10 space-y-2">
               <button 
-                onClick={() => setActiveSubTab('DETAILS')}
-                className={`w-full p-4 md:p-5 rounded-2xl flex items-center gap-4 transition-all ${activeSubTab === 'DETAILS' ? 'bg-stone-900 text-white shadow-lg' : 'bg-amber-50/50 text-stone-400 hover:bg-amber-100/50'}`}
+                onClick={() => { setActiveSubTab('DETAILS'); playUISound('tap'); }}
+                className={`w-full p-4 rounded-2xl flex items-center gap-4 transition-all ${activeSubTab === 'DETAILS' ? 'bg-stone-900 text-white shadow-lg' : 'bg-amber-50/50 text-stone-400 hover:bg-amber-100/50'}`}
               >
-                <UserIcon className="w-5 h-5" />
-                <span className="text-[10px] font-black uppercase tracking-widest">Account Details</span>
+                <Zap className="w-5 h-5" />
+                <span className="text-[10px] font-black uppercase tracking-widest">Config Portal</span>
               </button>
               <button 
-                onClick={() => setActiveSubTab('MESSAGES')}
-                className={`w-full p-4 md:p-5 rounded-2xl flex items-center gap-4 transition-all relative ${activeSubTab === 'MESSAGES' ? 'bg-stone-900 text-white shadow-lg' : 'bg-amber-50/50 text-stone-400 hover:bg-amber-100/50'}`}
+                onClick={() => { setActiveSubTab('MESSAGES'); playUISound('tap'); }}
+                className={`w-full p-4 rounded-2xl flex items-center gap-4 transition-all relative ${activeSubTab === 'MESSAGES' ? 'bg-stone-900 text-white shadow-lg' : 'bg-amber-50/50 text-stone-400 hover:bg-amber-100/50'}`}
               >
                 <MessageSquare className="w-5 h-5" />
-                <span className="text-[10px] font-black uppercase tracking-widest">Secure Portal</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">Neural Comm</span>
                 {userInquiries.length > 0 && activeSubTab !== 'MESSAGES' && (
                    <span className="absolute right-4 w-5 h-5 bg-amber-500 text-white rounded-full text-[8px] flex items-center justify-center font-black">{userInquiries.length}</span>
                 )}
@@ -205,114 +221,199 @@ const ProfileTab: React.FC<ProfileTabProps> = ({ user, inquiries, onUpdate, onLo
           </div>
         </div>
 
-        {/* Right Side: Tab Content */}
+        {/* Right Side: Multi-Step Configuration Wizard */}
         <div className="lg:col-span-8 space-y-8">
           {activeSubTab === 'DETAILS' ? (
-            <div className="bg-white rounded-[3rem] p-8 md:p-12 shadow-sm border border-amber-100/60 backdrop-blur-xl animate-in slide-in-from-right-10 duration-500">
-              <div className="flex items-center gap-5 mb-10 md:mb-12">
-                <div className="w-12 h-12 md:w-14 md:h-14 rounded-[1.25rem] bg-amber-50 border border-amber-100 flex items-center justify-center shadow-sm">
-                  <Info className="w-6 h-6 text-amber-600" />
+            <div className="bg-white rounded-[2.5rem] shadow-sm border border-amber-100/60 backdrop-blur-xl animate-in slide-in-from-right-4 duration-500 overflow-hidden">
+              {/* Wizard Progress Bar */}
+              <div className="bg-amber-50/30 border-b border-amber-100 px-8 py-6 flex items-center justify-between">
+                <div className="flex items-center gap-6">
+                  {steps.map((step) => (
+                    <div key={step.id} className="flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-black transition-all duration-500 ${currentStep >= step.id ? 'bg-amber-500 text-white shadow-md' : 'bg-white text-stone-300 border border-amber-100'}`}>
+                        {currentStep > step.id ? <Check className="w-4 h-4" /> : step.icon}
+                      </div>
+                      <span className={`hidden md:block text-[9px] font-black uppercase tracking-widest ${currentStep === step.id ? 'text-stone-900' : 'text-stone-300'}`}>
+                        {step.title}
+                      </span>
+                      {step.id < 3 && <div className={`w-8 h-px ${currentStep > step.id ? 'bg-amber-500' : 'bg-amber-100'}`} />}
+                    </div>
+                  ))}
                 </div>
-                <h3 className="text-xl md:text-2xl font-black text-stone-900 uppercase italic tracking-tighter">Identity Management</h3>
+                <div className="text-[10px] font-black text-stone-400 uppercase tracking-widest">
+                  Step {currentStep}/3
+                </div>
               </div>
 
-              <div className="space-y-8 md:space-y-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-black text-stone-400 uppercase tracking-[0.3em] ml-2">Public Identity</label>
-                    <input 
-                      type="text" 
-                      className="w-full px-6 md:px-8 py-4 md:py-5 rounded-2xl bg-amber-50/20 border-2 border-amber-100 focus:bg-white focus:border-amber-400 outline-none transition-all font-bold text-stone-800"
-                      value={user.name}
-                      onChange={(e) => onUpdate({ name: e.target.value })}
-                    />
-                  </div>
+              <div className="p-8 md:p-12">
+                <div className="min-h-[300px]">
+                  {currentStep === 1 && (
+                    <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
+                      <div className="space-y-2">
+                        <h3 className="text-xl font-black text-stone-900 uppercase italic tracking-tighter">Core Identity</h3>
+                        <p className="text-xs font-medium text-stone-400">Synchronize your primary contact and name across the Rentivo network.</p>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2.5">
+                          <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest ml-1">Legal Designation</label>
+                          <input 
+                            type="text" 
+                            className="w-full px-6 py-4 rounded-2xl bg-amber-50/20 border border-amber-100 focus:bg-white focus:border-amber-400 outline-none transition-all font-bold text-stone-800 shadow-sm"
+                            value={user.name}
+                            onChange={(e) => onUpdate({ name: e.target.value })}
+                            placeholder="John Doe"
+                          />
+                        </div>
 
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-black text-stone-400 uppercase tracking-[0.3em] ml-2">Contact Phone</label>
-                    <div className="relative">
-                      <Phone className="absolute left-6 md:left-7 top-1/2 -translate-y-1/2 text-amber-500 w-5 h-5" />
-                      <input 
-                        type="text" 
-                        className="w-full pl-14 md:pl-16 pr-6 md:pr-8 py-4 md:py-5 rounded-2xl bg-amber-50/20 border-2 border-amber-100 focus:bg-white focus:border-amber-400 outline-none transition-all font-bold text-stone-800"
-                        value={user.phone}
-                        onChange={(e) => onUpdate({ phone: e.target.value })}
-                      />
+                        <div className="space-y-2.5">
+                          <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest ml-1">Encrypted Phone</label>
+                          <div className="relative">
+                            <Phone className="absolute left-6 top-1/2 -translate-y-1/2 text-amber-500 w-4 h-4" />
+                            <input 
+                              type="text" 
+                              className="w-full pl-14 pr-6 py-4 rounded-2xl bg-amber-50/20 border border-amber-100 focus:bg-white focus:border-amber-400 outline-none transition-all font-bold text-stone-800 shadow-sm"
+                              value={user.phone}
+                              onChange={(e) => onUpdate({ phone: e.target.value })}
+                              placeholder="+91 00000 00000"
+                            />
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  )}
+
+                  {currentStep === 2 && (
+                    <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
+                      <div className="space-y-2">
+                        <h3 className="text-xl font-black text-stone-900 uppercase italic tracking-tighter">Temporal Logistics</h3>
+                        <p className="text-xs font-medium text-stone-400">Define your housing timeline and operational entity details.</p>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {user.role === 'LANDLORD' ? (
+                          <div className="col-span-2 space-y-2.5">
+                            <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest ml-1">Business Entity</label>
+                            <div className="relative">
+                              <Building2 className="absolute left-6 top-1/2 -translate-y-1/2 text-amber-500 w-4 h-4" />
+                              <input 
+                                type="text" 
+                                className="w-full pl-14 pr-6 py-4 rounded-2xl bg-amber-50/20 border border-amber-100 focus:bg-white focus:border-amber-400 outline-none transition-all font-bold text-stone-800 shadow-sm"
+                                value={user.businessName || ''}
+                                onChange={(e) => onUpdate({ businessName: e.target.value })}
+                                placeholder="e.g. Skyline Living India"
+                              />
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <div className="space-y-2.5">
+                              <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest ml-1">Move-In Horizon</label>
+                              <input 
+                                type="date" 
+                                className="w-full px-6 py-4 rounded-2xl bg-amber-50/20 border border-amber-100 focus:bg-white focus:border-amber-400 outline-none transition-all font-bold text-stone-800 shadow-sm"
+                                value={user.moveInDate || ''}
+                                onChange={(e) => onUpdate({ moveInDate: e.target.value })}
+                              />
+                            </div>
+                            <div className="space-y-2.5">
+                              <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest ml-1">Lease Commitment</label>
+                              <select 
+                                className="w-full px-6 py-4 rounded-2xl bg-amber-50/20 border border-amber-100 focus:bg-white focus:border-amber-400 outline-none transition-all font-bold text-stone-800 shadow-sm appearance-none"
+                                value={user.duration || ''}
+                                onChange={(e) => onUpdate({ duration: e.target.value })}
+                              >
+                                <option value="">Select Horizon</option>
+                                <option value="6 months">06 Months</option>
+                                <option value="1 year">12 Months</option>
+                                <option value="2 years+">Long Term (24m+)</option>
+                              </select>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {currentStep === 3 && (
+                    <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
+                      <div className="space-y-2">
+                        <h3 className="text-xl font-black text-stone-900 uppercase italic tracking-tighter">Spatial Narrative</h3>
+                        <p className="text-xs font-medium text-stone-400">Articulate your housing philosophy or property management vision.</p>
+                      </div>
+
+                      <div className="space-y-2.5">
+                        <label className="text-[10px] font-black text-stone-400 uppercase tracking-widest ml-1">Professional Brief</label>
+                        <textarea 
+                          rows={6}
+                          className="w-full px-6 py-5 rounded-[1.5rem] bg-amber-50/20 border border-amber-100 focus:bg-white focus:border-amber-400 outline-none transition-all font-bold text-stone-800 resize-none shadow-sm"
+                          value={user.bio || ''}
+                          onChange={(e) => onUpdate({ bio: e.target.value })}
+                          placeholder="Tell the network who you are..."
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black text-stone-400 uppercase tracking-[0.3em] ml-2">Secure Bio</label>
-                  <textarea 
-                    rows={5}
-                    className="w-full px-6 md:px-8 py-5 md:py-6 rounded-[2rem] bg-amber-50/20 border-2 border-amber-100 focus:bg-white focus:border-amber-400 outline-none transition-all font-bold text-stone-800 resize-none shadow-sm"
-                    value={user.bio || ''}
-                    onChange={(e) => onUpdate({ bio: e.target.value })}
-                  />
-                </div>
-
-                <div className="pt-6 md:pt-8">
+                <div className="pt-8 border-t border-amber-50 flex items-center justify-between">
                   <button 
-                    onClick={handleSave}
-                    disabled={isSaving}
-                    className={`w-full sm:w-auto px-12 md:px-16 py-4 md:py-6 rounded-[2rem] font-black text-lg md:text-xl transition-all active:scale-95 flex items-center justify-center gap-3 shadow-lg ${isSaving ? 'bg-emerald-500 text-white' : 'bg-amber-500 text-white hover:bg-amber-600'}`}
+                    onClick={prevStep}
+                    disabled={currentStep === 1}
+                    className="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-stone-400 hover:text-stone-900 disabled:opacity-0 transition-all flex items-center gap-2"
                   >
-                    {isSaving ? <Check className="w-6 h-6 animate-bounce" /> : 'Update Profile'}
+                    <ChevronLeft className="w-4 h-4" /> Previous
+                  </button>
+                  
+                  <button 
+                    onClick={nextStep}
+                    disabled={isSaving}
+                    className={`px-12 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all active:scale-95 flex items-center justify-center gap-3 shadow-lg ${currentStep === 3 ? 'bg-amber-500 text-white' : 'bg-stone-900 text-white hover:bg-stone-800'}`}
+                  >
+                    {isSaving ? (
+                      <><Check className="w-5 h-5 animate-bounce" /> Saved</>
+                    ) : (
+                      <>
+                        {currentStep === 3 ? 'Update Profile' : 'Next Phase'}
+                        {currentStep < 3 && <ChevronRight className="w-4 h-4" />}
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="space-y-8 animate-in slide-in-from-right-10 duration-500">
-               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-                 <div className="flex items-center gap-5">
-                   <div className="w-12 h-12 md:w-14 md:h-14 rounded-[1.25rem] bg-stone-900 flex items-center justify-center shadow-lg">
-                     <ShieldCheck className="w-6 h-6 text-amber-500" />
-                   </div>
-                   <h3 className="text-xl md:text-2xl font-black text-stone-900 uppercase italic tracking-tighter">Secure Communication</h3>
+            <div className="space-y-6 animate-in slide-in-from-right-4 duration-500">
+               <div className="flex items-center justify-between mb-4 bg-stone-900 p-6 md:p-8 rounded-[2rem] text-white shadow-xl">
+                 <div className="flex items-center gap-4">
+                   <ShieldCheck className="w-6 h-6 text-amber-500" />
+                   <h3 className="text-xl md:text-2xl font-black uppercase italic tracking-tighter">Neural Comm Logs</h3>
                  </div>
-                 <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">{userInquiries.length} Conversations</span>
+                 <span className="text-[9px] font-black uppercase tracking-widest text-stone-400">{userInquiries.length} Active Leads</span>
                </div>
 
-               <div className="grid grid-cols-1 gap-6">
+               <div className="grid grid-cols-1 gap-4">
                  {userInquiries.length > 0 ? userInquiries.map(iq => (
-                   <div key={iq.id} className="bg-white rounded-[3rem] p-8 md:p-10 shadow-sm border border-amber-100 flex flex-col md:flex-row gap-8 md:gap-10 group hover:border-amber-500 transition-all">
-                     <div className="w-24 h-24 md:w-32 md:h-32 rounded-[2rem] overflow-hidden flex-shrink-0 border border-amber-50 shadow-inner mx-auto md:mx-0">
-                       <img src={iq.propertyPhoto} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" alt="" />
+                   <div key={iq.id} className="bg-white rounded-[2rem] p-6 md:p-8 shadow-sm border border-amber-100 flex flex-col md:flex-row gap-6 group hover:border-amber-500 transition-all">
+                     <div className="w-20 h-20 rounded-2xl overflow-hidden flex-shrink-0 border border-amber-50 shadow-inner">
+                       <img src={iq.propertyPhoto} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[3s]" alt="" />
                      </div>
-                     <div className="flex-1 space-y-4 md:space-y-6">
-                       <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
-                         <div className="space-y-1">
-                           <h4 className="font-black text-stone-900 text-lg md:text-xl tracking-tighter truncate uppercase italic">{iq.propertyTitle}</h4>
-                           <div className="flex items-center gap-3">
-                             <img src={iq.senderAvatar} className="w-6 h-6 rounded-full border border-amber-100" alt="" />
-                             <span className="text-[10px] font-black text-stone-400 uppercase tracking-widest">{user.role === 'LANDLORD' ? 'From' : 'To Landlord of'} {iq.senderName}</span>
-                           </div>
-                         </div>
-                         <div className={`px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest ${iq.status === 'PENDING' ? 'bg-amber-50 text-amber-600' : iq.status === 'ACCEPTED' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
-                           {iq.status}
-                         </div>
+                     <div className="flex-1 space-y-4">
+                       <div className="flex items-start justify-between">
+                         <h4 className="font-black text-stone-900 text-lg tracking-tighter uppercase italic truncate">{iq.propertyTitle}</h4>
+                         <span className={`px-3 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest ${iq.status === 'PENDING' ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-emerald-600'}`}>{iq.status}</span>
                        </div>
-                       
-                       <div className="p-4 md:p-6 bg-amber-50/50 rounded-2xl italic text-stone-600 font-medium leading-relaxed border-l-4 border-amber-200 text-sm md:text-base">
-                         "{iq.message}"
-                       </div>
-
-                       <div className="flex flex-wrap gap-4 md:gap-6 text-[10px] font-black uppercase tracking-widest text-stone-400">
-                          <div className="flex items-center gap-2"><Calendar className="w-4 h-4 text-amber-500" /> {iq.moveInDate || 'TBD'}</div>
-                          <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-amber-500" /> {new Date(iq.timestamp).toLocaleDateString()}</div>
-                          <div className="flex items-center gap-2"><ArrowUpRight className="w-4 h-4 text-amber-500" /> Verified</div>
+                       <p className="p-4 bg-amber-50/30 rounded-xl italic text-stone-600 font-medium text-sm leading-relaxed border-l-4 border-amber-200">"{iq.message}"</p>
+                       <div className="flex flex-wrap gap-4 text-[9px] font-black uppercase tracking-widest text-stone-400">
+                          <div className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-amber-500" /> {iq.moveInDate || 'Flexible'}</div>
+                          <div className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5 text-amber-500" /> {new Date(iq.timestamp).toLocaleDateString()}</div>
                        </div>
                      </div>
                    </div>
                  )) : (
-                   <div className="py-24 md:py-32 bg-amber-50/20 rounded-[3rem] md:rounded-[4rem] border-2 border-dashed border-amber-100 flex flex-col items-center justify-center text-center px-10">
-                     <div className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm border border-amber-50">
-                       <MessageSquare className="w-8 h-8 md:w-10 md:h-10 text-stone-200" />
-                     </div>
-                     <p className="text-xl font-black text-stone-400 uppercase tracking-tighter italic mb-2">Latent Space Empty</p>
-                     <p className="text-stone-300 font-medium max-w-xs text-sm">Once you transmit secure inquiries, they will manifest here as chronological logs.</p>
+                   <div className="py-24 bg-amber-50/20 rounded-[2.5rem] border-2 border-dashed border-amber-100 flex flex-col items-center justify-center text-center px-10">
+                     <MessageSquare className="w-10 h-10 text-stone-200 mb-4" />
+                     <p className="text-sm font-black text-stone-400 uppercase tracking-widest">No Active Transmissions</p>
                    </div>
                  )}
                </div>
